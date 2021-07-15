@@ -38,6 +38,8 @@ if __name__ == "__main__":
     env = gym.make("RockWalk-v0", bullet_connection=1, step_freq=sim_hz, frame_skip=1)
     env.reset()
     while True:
-        action = 10 * np.array([js.x,js.y])
-        env.step(action)
-        sleep(1/sim_hz)
+        sleep(1 / sim_hz)
+        action = 10 * np.array([-js.y,js.x])
+        obs, rewards, dones, info = env.step(action)
+        if dones:
+            env.reset()
