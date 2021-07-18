@@ -12,6 +12,7 @@ class Joystick:
     def __init__(self):
         self.x = 0
         self.y = 0
+        self.z = 0
         pygame.init()
         pygame.joystick.init()
         print(f'{pygame.joystick.get_count()} joysticks found')
@@ -29,17 +30,18 @@ class Joystick:
             pygame.event.get()
             self.x = self.joy.get_axis(3)
             self.y = self.joy.get_axis(4)
+            self.z = self.joy.get_axis(1)
 
 
 if __name__ == "__main__":
     js = Joystick()
     sim_hz = 5000
     joystick_scale = 10
-    env = gym.make("RockWalk-v0", bullet_connection=1, step_freq=sim_hz, frame_skip=1, episode_timeout=1000)
+    env = gym.make("CableRockWalk-v0", bullet_connection=1, step_freq=sim_hz, frame_skip=1, episode_timeout=1000)
     env.reset()
     while True:
         sleep(1./sim_hz)
-        action = joystick_scale * np.array([js.y, js.x])
+        action = joystick_scale * np.array([js.y, js.x, -js.z])
         obs, rewards, done, info = env.step(action)
         if done:
             env.reset()

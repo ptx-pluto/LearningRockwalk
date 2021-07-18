@@ -1,1 +1,2 @@
 from rock_walk.envs.rock_walk_env import RockWalkEnv
+from rock_walk.envs.rnw_single_cable_env import RnwSingleCableEnv
