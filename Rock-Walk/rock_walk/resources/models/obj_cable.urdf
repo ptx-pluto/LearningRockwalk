@@ -141,11 +141,11 @@
   </joint>
 
   <joint name="joint_cable_tether" type="prismatic">
-    <origin xyz="0 0 -1"/>
+    <origin xyz="0 0.3 -1.5"/>
     <axis xyz="0 0 1"/>
     <parent link="cable_z_link"/>
     <child link="object"/>
-    <limit lower="0." upper="0.5"/>
+    <limit lower="-1.0" upper="1.0"/>
   </joint>
 
 </robot>

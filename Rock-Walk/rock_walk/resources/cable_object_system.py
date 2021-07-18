@@ -10,7 +10,7 @@ class CableObjectSystem:
     def __init__(self, client, yaw_spawn):
         self.clientID = client
         f_name = os.path.join(os.path.dirname(__file__), 'models/obj_cable.urdf')
-        base_position = [0.35*np.sin(yaw_spawn), -0.35*np.cos(yaw_spawn), 1.20]
+        base_position = [0.35*np.sin(yaw_spawn), -0.35*np.cos(yaw_spawn), 1.50]
         self.robotID = bullet.loadURDF(
             fileName=f_name, basePosition=base_position, useFixedBase=1, physicsClientId=client
         )
