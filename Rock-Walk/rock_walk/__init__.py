@@ -9,3 +9,8 @@ register(
     id='CableRockWalk-v0',
     entry_point='rock_walk.envs:RnwSingleCableEnv'
 )
+
+register(
+    id='MotionControlRnw-v0',
+    entry_point='rock_walk.envs:MotionControlRnwEnv'
+)
