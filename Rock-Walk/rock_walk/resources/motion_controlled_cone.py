@@ -1,6 +1,7 @@
 import os
 import pybullet
 from pprint import pprint
+from rock_walk.resources.utils import *
 
 
 class MotionControlledCone:
@@ -20,10 +21,13 @@ class MotionControlledCone:
         self.joint_info = [pybullet.getJointInfo(self.bodyID, i) for i in range(pybullet.getNumJoints(self.bodyID))]
         self.joint_name2id = dict([(item[1].decode("UTF-8"), item[0]) for item in self.joint_info])
         self.link_name2id = dict([(item[12].decode("UTF-8"), item[0]) for item in self.joint_info])
+        print('Joints:')
         pprint(self.joint_name2id)
+        print('Links:')
         pprint(self.link_name2id)
         self.joint_id2name = dict([(item[0], item[1].decode("UTF-8")) for item in self.joint_info])
         self.link_id2name = dict([(item[0], item[12].decode("UTF-8")) for item in self.joint_info])
+        self.cone_link_name = 'cone'
 
     def apply_action(self, action):
         self.apply_joint_vel('joint_apex_x', action[0])
@@ -48,3 +52,28 @@ class MotionControlledCone:
             force=0,
             physicsClientId=self.clientID
         )
+
+    @property
+    def coneID(self):
+        return self.link_name2id[self.cone_link_name]
+
+    def get_cone_odom(self):
+        p, q = pybullet.getLinkState(
+            self.bodyID,
+            self.coneID,
+            physicsClientId=self.clientID)[0:2]
+        v, w = pybullet.getLinkState(
+            self.bodyID,
+            self.coneID,
+            computeLinkVelocity=1,
+            physicsClientId=self.clientID)[-2:]
+        return p, q, v, w
+
+    def get_rnw_state(self):
+        p, q, v, w = self.get_cone_odom()
+        R = transform_to_body_frame(
+            pybullet.getMatrixFromQuaternion(q, self.clientID)
+        )
+        psi, theta, phi = compute_body_euler(R)
+        psi_dot, theta_dot, phi_dot = compute_body_velocity(R, w)
+        return [p[0], p[1], psi, theta, phi, v[0], v[1], psi_dot, theta_dot, phi_dot]
