@@ -21,12 +21,12 @@ class MotionControlledCone:
         self.joint_info = [pybullet.getJointInfo(self.bodyID, i) for i in range(pybullet.getNumJoints(self.bodyID))]
         self.joint_name2id = dict([(item[1].decode("UTF-8"), item[0]) for item in self.joint_info])
         self.link_name2id = dict([(item[12].decode("UTF-8"), item[0]) for item in self.joint_info])
+        self.joint_id2name = dict([(item[0], item[1].decode("UTF-8")) for item in self.joint_info])
+        self.link_id2name = dict([(item[0], item[12].decode("UTF-8")) for item in self.joint_info])
         print('Joints:')
         pprint(self.joint_name2id)
         print('Links:')
         pprint(self.link_name2id)
-        self.joint_id2name = dict([(item[0], item[1].decode("UTF-8")) for item in self.joint_info])
-        self.link_id2name = dict([(item[0], item[12].decode("UTF-8")) for item in self.joint_info])
         self.cone_link_name = 'cone'
         self.strength = [500, 500, 500]
 
