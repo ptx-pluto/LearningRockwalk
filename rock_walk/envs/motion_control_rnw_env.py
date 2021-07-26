@@ -129,8 +129,8 @@ class MotionControlRnwEnv(gym.Env):
         self.cone.dynamics.lateral_friction = self._mu_cone_ground
         # self.plane.dynamics.rolling_friction = 0.5
         # self.cone.dynamics.rolling_friction = 0.5
-        self.plane.dynamics.spinning_friction = 0.01
-        self.cone.dynamics.spinning_friction = 0.01
+        # self.plane.dynamics.spinning_friction = 0.01
+        # self.cone.dynamics.spinning_friction = 0.01
 
     def adjust_camera_pose(self):
         base_pos, _ = bullet.getBasePositionAndOrientation(self.cone.bodyID, self.clientID)
