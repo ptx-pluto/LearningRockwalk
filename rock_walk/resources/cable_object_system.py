@@ -14,6 +14,7 @@ class CableObjectSystem:
         self.robotID = bullet.loadURDF(
             fileName=f_name, basePosition=base_position, useFixedBase=1, physicsClientId=client
         )
+        self.link_idx_obj = 7
 
     def get_ids(self):
         return self.robotID, self.clientID
@@ -59,35 +60,6 @@ class CableObjectSystem:
                                      force=0,
                                      physicsClientId=self.clientID)
 
-
-    def move_z(self, z_des):
-        bullet.setJointMotorControl2(
-            self.robotID,
-            jointIndex=2,
-            controlMode=bullet.POSITION_CONTROL,
-            targetPosition=z_des,
-            physicsClientId=self.clientID
-        )
-
-    def speedl(self, speed):
-        bullet.setJointMotorControl2(self.robotID,
-                                     jointIndex=0,
-                                     controlMode=bullet.VELOCITY_CONTROL,
-                                     targetVelocity=speed[0],
-                                     physicsClientId=self.clientID)
-
-        bullet.setJointMotorControl2(self.robotID,
-                                     jointIndex=1,
-                                     controlMode=bullet.VELOCITY_CONTROL,
-                                     targetVelocity=speed[1],
-                                     physicsClientId=self.clientID)
-
-        bullet.setJointMotorControl2(self.robotID,
-                                     jointIndex=2,
-                                     controlMode=bullet.VELOCITY_CONTROL,
-                                     targetVelocity=speed[2],
-                                     physicsClientId=self.clientID)
-
     def get_observation(self):
         link_pos_world = bullet.getLinkState(self.robotID, linkIndex=2, physicsClientId=self.clientID)[0]
         link_vel_world = bullet.getLinkState(self.robotID, linkIndex=2, computeLinkVelocity=1, physicsClientId=self.clientID)[-2]
@@ -96,4 +68,9 @@ class CableObjectSystem:
         return state
 
     def get_object_state(self):
+        link_pos_world = bullet.getLinkState(self.robotID, linkIndex=2, physicsClientId=self.clientID)[0]
+        link_vel_world = bullet.getLinkState(self.robotID, linkIndex=2, computeLinkVelocity=1, physicsClientId=self.clientID)[-2]
+        state = [link_pos_world[0], link_pos_world[1], link_pos_world[2],
+                 link_vel_world[0], link_vel_world[1], link_vel_world[2]]
+        return state
         pass
