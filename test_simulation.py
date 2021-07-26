@@ -23,7 +23,12 @@ if __name__ == "__main__":
     js = Joystick()
     stream = DataStream()
     sim_hz = 240
-    env = gym.make("MotionControlRnw-v0", bullet_connection=1, step_freq=sim_hz, frame_skip=1, episode_timeout=1000)
+    env = gym.make("MotionControlRnw-v0", env_config={
+        'bullet_connection': 1,
+        'step_freq': sim_hz,
+        'frame_skip': 1,
+        'episode_timeout': 1000.
+    })
     env.reset()
     while True:
         sleep(1./sim_hz)

@@ -15,7 +15,12 @@ from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, VecVideo
 if __name__ == "__main__":
     freq = 240.
     frame_skip = 1
-    env = gym.make("MotionControlRnw-v0", bullet_connection=1, step_freq=freq, frame_skip=frame_skip)
+    env = gym.make("MotionControlRnw-v0", env_config={
+        'bullet_connection': 1,
+        'step_freq': freq,
+        'frame_skip': frame_skip,
+        'episode_timeout': 60.
+    })
     trained_model = SAC.load("./save/rw_model_150000_steps", device="cpu")
     print("Trained model loaded")
     obs = env.reset()

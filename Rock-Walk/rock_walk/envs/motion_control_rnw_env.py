@@ -18,11 +18,20 @@ import pkgutil
 
 class MotionControlRnwEnv(gym.Env):
 
-    def __init__(self, bullet_connection, step_freq, frame_skip, episode_timeout=5.):
+    def __init__(self, env_config):
 
-        self._bullet_connection = bullet_connection
-        self._frame_skip = frame_skip
-        self._ep_timeout = episode_timeout
+        default_env_config = {
+            'bullet_connection': 0,
+            'step_freq': 240,
+            'frame_skip': 24,
+            'episode_timeout': 60.
+        }
+
+        default_env_config.update(env_config)
+
+        self._bullet_connection = default_env_config['bullet_connection'] 
+        self._frame_skip = default_env_config['frame_skip']
+        self._ep_timeout = default_env_config['episode_timeout']
         self._mu_min = 0.2
         self._mu_max = 2.0
 
@@ -45,7 +54,7 @@ class MotionControlRnwEnv(gym.Env):
         obs_high = np.array([100, 100, 100, 100, np.pi, np.pi, np.pi, 10, 10, 10, 10, 10], dtype=np.float64)
         self.observation_space = gym.spaces.box.Box(low=obs_low, high=obs_high)
 
-        self.bullet_setup(bullet_connection)
+        self.bullet_setup(self._bullet_connection)
 
         self.np_random, _ = gym.utils.seeding.np_random()
         self.reset()
@@ -118,6 +127,10 @@ class MotionControlRnwEnv(gym.Env):
         self.cone.set_strength_mass_ratio(0.3)
         self.plane.dynamics.lateral_friction = self._mu_cone_ground
         self.cone.dynamics.lateral_friction = self._mu_cone_ground
+        # self.plane.dynamics.rolling_friction = 0.5
+        # self.cone.dynamics.rolling_friction = 0.5
+        self.plane.dynamics.spinning_friction = 0.01
+        self.cone.dynamics.spinning_friction = 0.01
 
     def adjust_camera_pose(self):
         base_pos, _ = bullet.getBasePositionAndOrientation(self.cone.bodyID, self.clientID)

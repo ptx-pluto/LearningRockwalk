@@ -15,7 +15,12 @@ from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, VecVideo
 if __name__ == "__main__":
     freq = 240
     frame_skip = 24
-    env = gym.make("MotionControlRnw-v0", bullet_connection=0, step_freq=freq, frame_skip=frame_skip)
+    env = gym.make("MotionControlRnw-v0", env_config={
+        'bullet_connection': 0,
+        'step_freq': freq,
+        'frame_skip': frame_skip,
+        'episode_timeout': 60.
+    })
     env = Monitor(env, "./log")
     n_actions = env.action_space.shape[-1]
     action_noise = OrnsteinUhlenbeckActionNoise(mean=0 * np.ones(n_actions), sigma=1.5 * np.ones(n_actions))
