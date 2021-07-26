@@ -114,10 +114,10 @@ class MotionControlRnwEnv(gym.Env):
         self.goal = Goal(self.clientID, self.goal_position[0], self.goal_position[1])
         self.plane = Plane(self.clientID)
         self.cone = MotionControlledCone(self.clientID)
-        self.cone.mass = 10
+        self.cone.dynamics.mass = 10
         self.cone.set_strength_mass_ratio(0.3)
-        self.plane.lateral_friction = self._mu_cone_ground
-        self.cone.lateral_friction = self._mu_cone_ground
+        self.plane.dynamics.lateral_friction = self._mu_cone_ground
+        self.cone.dynamics.lateral_friction = self._mu_cone_ground
 
     def adjust_camera_pose(self):
         base_pos, _ = bullet.getBasePositionAndOrientation(self.cone.bodyID, self.clientID)

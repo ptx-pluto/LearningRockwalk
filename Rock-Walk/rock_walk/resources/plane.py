@@ -1,6 +1,8 @@
 import pybullet
 import os
 
+from rock_walk.dynamics import Dynamics
+
 
 class Plane:
     def __init__(self, client):
@@ -15,11 +17,4 @@ class Plane:
         )
         self.textureID = pybullet.loadTexture('checker_blue.png')
         pybullet.changeVisualShape(self.bodyID, -1, textureUniqueId=self.textureID, physicsClientId=self.clientID)
-
-    @property
-    def lateral_friction(self):
-        return pybullet.getDynamicsInfo(self.bodyID, -1, physicsClientId=self.clientID)[1]
-
-    @lateral_friction.setter
-    def lateral_friction(self, value):
-        pybullet.changeDynamics(self.bodyID, -1, lateralFriction=value, physicsClientId=self.clientID)
+        self.dynamics = Dynamics(self.bodyID, -1, self.clientID)

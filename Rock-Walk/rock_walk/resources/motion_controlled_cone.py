@@ -1,7 +1,9 @@
 import os
 import pybullet
 from pprint import pprint
+from rock_walk.dynamics import Dynamics
 from rock_walk.resources.utils import *
+from rock_walk.pybullet_enum import *
 
 
 class MotionControlledCone:
@@ -29,6 +31,7 @@ class MotionControlledCone:
         pprint(self.link_name2id)
         self.cone_link_name = 'cone'
         self.strength = [500, 500, 500]
+        self.dynamics = Dynamics(self.bodyID, self.coneID, self.clientID)
 
     def apply_action(self, action):
         self.apply_joint_vel('joint_apex_x', action[0], self.strength_x)
@@ -80,22 +83,6 @@ class MotionControlledCone:
         return [p[0], p[1], psi, theta, phi, v[0], v[1], psi_dot, theta_dot, phi_dot]
 
     @property
-    def lateral_friction(self):
-        return pybullet.getDynamicsInfo(self.bodyID, self.coneID, physicsClientId=self.clientID)[1]
-
-    @lateral_friction.setter
-    def lateral_friction(self, value):
-        pybullet.changeDynamics(self.bodyID, self.coneID, lateralFriction=value, physicsClientId=self.clientID)
-
-    @property
-    def mass(self):
-        return pybullet.getDynamicsInfo(self.bodyID, self.coneID, physicsClientId=self.clientID)[0]
-
-    @mass.setter
-    def mass(self, value):
-        pybullet.changeDynamics(self.bodyID, self.coneID, mass=value, physicsClientId=self.clientID)
-
-    @property
     def strength_x(self):
         return self.strength[0]
 
@@ -120,7 +107,7 @@ class MotionControlledCone:
         self.strength[2] = val
 
     def set_strength_mass_ratio(self, ratio):
-        val = ratio * 9.8 * self.mass
+        val = ratio * 9.8 * self.dynamics.mass
         self.strength_x = val
         self.strength_y = val
         self.strength_z = val
