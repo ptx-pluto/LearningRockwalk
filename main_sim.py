@@ -30,11 +30,21 @@ class RLModel:
                 f.write(str(0)+","+str(0)+","+str(0)+","+str(0)+","+str(0)+"\n")
                 f.write(str(object_param[0])+","+str(object_param[1])+","+str(object_param[2])+","+str(object_param[3])+","+str(object_param[4])+"\n")
 
-            self._env = gym.make("RockWalk-v0",bullet_connection=connection,step_freq=freq,frame_skip=frame_skip,isTrain=train)
+            self._env = gym.make("RockWalk-v0", config={
+                'bullet_connection': connection,
+                'step_freq': freq,
+                'frame_skip': frame_skip,
+                'isTrain': train
+            })
             self._env = Monitor(self._env, "./log")
 
         else:
-            self._env = gym.make("RockWalk-v0",bullet_connection=connection,step_freq=freq,frame_skip=frame_skip,isTrain=train)
+            self._env = gym.make("RockWalk-v0", config={
+                'bullet_connection': connection,
+                'step_freq': freq,
+                'frame_skip': frame_skip,
+                'isTrain': train
+            })
 
 
     def train_model(self):

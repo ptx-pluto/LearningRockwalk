@@ -3,6 +3,7 @@ import math
 import time
 import numpy as np
 import pybullet as bullet
+import os
 
 import matplotlib.pyplot as plt
 
@@ -17,15 +18,17 @@ from scipy.spatial.transform import Rotation as R
 
 class RockWalkEnv(gym.Env):
 
-    def __init__(self, bullet_connection, step_freq, frame_skip, isTrain):
-        self._bullet_connection = bullet_connection
-        self._frame_skip = frame_skip
-        self._isTrain = isTrain
+    def __init__(self, config):
+
+        self._bullet_connection = config['bullet_connection']
+        self._frame_skip = config['frame_skip']
+        self._isTrain = config['isTrain']
         self._episode_timout = 3
 
         self._desired_nutation = 25 # in degrees
 
-        self._object_param_file_path = "/home/nazir/learning_rockwalk/learning_moai/training_objects_params.txt"
+        self._object_param_file_path = \
+            os.path.join(os.path.dirname(__file__), '../../../training_objects_params.txt')
         if self._isTrain==True:
             self._init_object_param = list(np.loadtxt(self._object_param_file_path, delimiter=',', skiprows=1, dtype=np.float64)[-1:].flatten())
         else:
@@ -34,7 +37,7 @@ class RockWalkEnv(gym.Env):
             self._init_object_param = ellipse_params + apex_coordinates
 
         self.bullet_setup(self._bullet_connection)
-        bullet.setTimeStep(1./step_freq, self.clientID)
+        bullet.setTimeStep(1./config['step_freq'], self.clientID)
 
         self.goal = Goal(self.clientID) # for visualizing the direction of transport.
         self.plane = Plane(self.clientID) # support surface representing ground
