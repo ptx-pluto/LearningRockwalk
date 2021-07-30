@@ -26,23 +26,29 @@ if __name__ == "__main__":
             "env": RockWalkEnv,
             "rollout_fragment_length": 100,
             "learning_starts": 2000,
-            "num_gpus": 1,
-            "num_workers": 6,
+            "num_gpus": 0,
+            "num_workers": 0,
             "env_config": {
-                'bullet_connection': 0,
-                'step_freq': 50,
-                'frame_skip': 10,
+                'bullet_connection': 1,
+                'step_freq': 240,
+                'frame_skip': 1,
                 'isTrain': True
             }
     })
 
-    tune.run(
-        "SAC",
-        stop={"timesteps_total": 1e6},
-        config=config,
-        local_dir="./results",
-        name="test_experiment",
-        keep_checkpoints_num=10,
-        checkpoint_freq=5,
-        checkpoint_at_end=True,
-    )
+    trainer = SACTrainer(config=config)
+    trainer.restore('./results/test_experiment/SAC_RockWalkEnv_1d353_00000_0_2021-07-31_01-53-58/checkpoint_000305/checkpoint-305')
+
+    while True:
+        trainer.step()
+
+    # tune.run(
+    #     "SAC",
+    #     stop={"timesteps_total": 1e6},
+    #     config=config,
+    #     local_dir="./results",
+    #     name="test_experiment",
+    #     keep_checkpoints_num=10,
+    #     checkpoint_freq=5,
+    #     checkpoint_at_end=True,
+    # )
