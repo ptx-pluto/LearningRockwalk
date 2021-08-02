@@ -43,7 +43,7 @@ class RockWalkEnv(gym.Env):
         self.cone = TrainObject(self.clientID)
         self.cone.generate_object_mesh(ellipse_params=self._init_object_param[:2],
                                        apex_coordinates=self._init_object_param[2:], density=10)
-        self.cone.generate_urdf_file()
+        #self.cone.generate_urdf_file()
 
         action_low = np.array([-1, -1], dtype=np.float64)
         action_high = np.array([1, 1], dtype=np.float64)

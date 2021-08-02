@@ -10,7 +10,8 @@ from stable_baselines3 import TD3, SAC, PPO
 from stable_baselines3.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback, CallbackList
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, VecVideoRecorder
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, VecVideoRecorder, SubprocVecEnv
+from stable_baselines3.common.env_util import make_vec_env
 
 from custom_callback import GenerateObjectCallback
 
@@ -29,20 +30,26 @@ if __name__ == "__main__":
         f.write(str(object_param[0]) + "," + str(object_param[1]) + "," + str(object_param[2]) + "," + str(
             object_param[3]) + "," + str(object_param[4]) + "\n")
 
-    env = gym.make("RockWalk-v0", bullet_connection=0, step_freq=freq, frame_skip=frame_skip, isTrain=True)
-    env = Monitor(env, "./log")
+    #env = gym.make("RockWalk-v0", bullet_connection=0, step_freq=freq, frame_skip=frame_skip, isTrain=True)
+
+    # env = DummyVecEnv([lambda: gym.make("RockWalk-v0", bullet_connection=0,step_freq=freq,frame_skip=frame_skip,isTrain=True)])
+
+    env = make_vec_env("RockWalk-v0", vec_env_cls=SubprocVecEnv, n_envs=8, env_kwargs={
+        'bullet_connection': 0,
+        'step_freq': freq,
+        'frame_skip': frame_skip,
+        'isTrain': True
+    })
+    #env = Monitor(env, "./log")
 
     n_actions = env.action_space.shape[-1]
     action_noise = OrnsteinUhlenbeckActionNoise(mean=0 * np.ones(n_actions), sigma=1.5 * np.ones(n_actions))  # 5 prev
     # self._model.set_random_seed(seed=999)
 
-    model = SAC("MlpPolicy",
+    model = PPO("MlpPolicy",
                 env,
-                action_noise=action_noise,
+                n_steps=64,
                 batch_size=128,
-                train_freq=64,
-                gradient_steps=64,
-                learning_starts=20000,
                 verbose=1,
                 tensorboard_log="./rockwalk_tb/"
                 )
