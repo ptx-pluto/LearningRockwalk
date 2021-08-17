@@ -85,7 +85,11 @@ class RockWalkEnv(gym.Env):
         ob = np.array([noisy_cone_state[2], noisy_cone_state[3], noisy_cone_state[4],
                        noisy_cone_state[7], noisy_cone_state[8], noisy_cone_state[9]]+object_param, dtype=np.float64)
 
-        return ob, reward, self.done, dict()
+        info = {
+            'odom': self.cone.get_odom()
+        }
+
+        return ob, reward, self.done, info
 
 
     def reset(self):

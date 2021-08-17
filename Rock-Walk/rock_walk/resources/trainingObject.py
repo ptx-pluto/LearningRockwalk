@@ -124,6 +124,11 @@ class TrainObject:
 
         return state, total_energy
 
+    def get_odom(self):
+        p, q = bullet.getLinkState(self.objectID, linkIndex=5, physicsClientId=self.clientID)[0:2]
+        v, w = bullet.getLinkState(self.objectID, linkIndex=5, computeLinkVelocity=1, physicsClientId=self.clientID)[-2:]
+        return p, q, v, w
+
     def get_noisy_observation(self, np_random):
 
         cone_state, cone_te = self.get_observation()
