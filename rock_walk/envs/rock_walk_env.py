@@ -14,6 +14,7 @@ from rock_walk.resources.goal import Goal
 from rock_walk.resources.controller import ExpertController
 
 from scipy.spatial.transform import Rotation as R
+import os
 
 class RockWalkEnv(gym.Env):
 

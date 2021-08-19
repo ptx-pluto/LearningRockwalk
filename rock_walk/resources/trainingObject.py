@@ -42,7 +42,9 @@ class TrainObject:
         self._mesh_CoM = mesh_mass_properties['center_mass']
         self._mesh_inertia_tensor = mesh_mass_properties['inertia']
 
-        mesh.export('./Rock-Walk/rock_walk/resources/models/mesh/object_mesh.obj')
+        mesh.export(
+            os.path.join(os.path.dirname(__file__), 'models/mesh/object_mesh.obj')
+        )
 
 
     def load_model_from_urdf(self, yaw_spawn):
@@ -363,7 +365,7 @@ class TrainObject:
 
 </robot>'''
 
-        with open('./Rock-Walk/rock_walk/resources/models/auto_object.urdf', 'w') as f:
+        with open(os.path.join(os.path.dirname(__file__), 'models/auto_object.urdf'), 'w') as f:
             f.write(data)
 
 
